@@ -1,0 +1,19 @@
+# Render Blueprint: เว็บ + API + ฐานข้อมูล Postgres (แผน Free)
+databases:
+  - name: qc-db
+    plan: free
+services:
+  - type: web
+    name: qc-checkpoint
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /healthz
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.7
+      - key: DATABASE_URL
+        fromDatabase:
+          name: qc-db
+          property: connectionString
